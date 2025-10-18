@@ -13,6 +13,7 @@ import org.example.elecciones_backend.repositories.MesaRepository;
 import org.example.elecciones_backend.repositories.PartidoRepository;
 import org.example.elecciones_backend.repositories.PersonaRepository;
 import org.example.elecciones_backend.services.DelegadoService;
+import org.example.elecciones_backend.services.RoleValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,9 @@ public class DelegadoServiceImpl implements DelegadoService {
     @Autowired
     private MesaRepository mesaRepository;
 
+    @Autowired
+    private RoleValidationService roleValidationService;
+
     @Override
     public DelegadoDTO createDelegado(DelegadoDTO delegadoDTO) {
         Delegado delegado = DelegadoMapper.mapDelegadoDTOToDelegado(delegadoDTO);
@@ -42,6 +46,10 @@ public class DelegadoServiceImpl implements DelegadoService {
         if (delegadoDTO.getIdPersona() != null) {
             Persona persona = personaRepository.findById(delegadoDTO.getIdPersona())
                     .orElseThrow(() -> new ResourceNotFoundException("Persona not found with id " + delegadoDTO.getIdPersona()));
+            
+            // Validar que la persona no tenga roles duplicados
+            roleValidationService.validateUniqueRole(persona, "Delegado");
+            
             delegado.setPersona(persona);
         }
         

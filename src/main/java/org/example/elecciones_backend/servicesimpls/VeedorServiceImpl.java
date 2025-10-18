@@ -11,6 +11,7 @@ import org.example.elecciones_backend.repositories.InstitucionRepository;
 import org.example.elecciones_backend.repositories.PersonaRepository;
 import org.example.elecciones_backend.repositories.VeedorRepository;
 import org.example.elecciones_backend.services.VeedorService;
+import org.example.elecciones_backend.services.RoleValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,9 @@ public class VeedorServiceImpl implements VeedorService {
     @Autowired
     private InstitucionRepository institucionRepository;
 
+    @Autowired
+    private RoleValidationService roleValidationService;
+
     @Override
     public VeedorDTO createVeedor(VeedorDTO veedorDTO) {
         Veedor veedor = VeedorMapper.mapVeedorDTOToVeedor(veedorDTO);
@@ -37,6 +41,10 @@ public class VeedorServiceImpl implements VeedorService {
         if (veedorDTO.getIdPersona() != null) {
             Persona persona = personaRepository.findById(veedorDTO.getIdPersona())
                     .orElseThrow(() -> new ResourceNotFoundException("Persona not found with id " + veedorDTO.getIdPersona()));
+            
+            // Validar que la persona no tenga roles duplicados
+            roleValidationService.validateUniqueRole(persona, "Veedor");
+            
             veedor.setPersona(persona);
         }
         

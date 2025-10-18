@@ -17,6 +17,7 @@ import org.example.elecciones_backend.repositories.PersonaRepository;
 import org.example.elecciones_backend.repositories.VeedorRepository;
 import org.example.elecciones_backend.repositories.DelegadoRepository;
 import org.example.elecciones_backend.services.JuradoService;
+import org.example.elecciones_backend.services.RoleValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,9 @@ public class JuradoServiceImpl implements JuradoService {
     @Autowired
     private DelegadoRepository delegadoRepository;
 
+    @Autowired
+    private RoleValidationService roleValidationService;
+
     @Override
     public JuradoDTO createJurado(JuradoDTO juradoDTO) {
         Jurado jurado = JuradoMapper.mapJuradoDTOToJurado(juradoDTO);
@@ -52,6 +56,10 @@ public class JuradoServiceImpl implements JuradoService {
         if (juradoDTO.getIdPersona() != null) {
             Persona persona = personaRepository.findById(juradoDTO.getIdPersona())
                     .orElseThrow(() -> new ResourceNotFoundException("Persona not found with id " + juradoDTO.getIdPersona()));
+            
+            // Validar que la persona no tenga roles duplicados
+            roleValidationService.validateUniqueRole(persona, "Jurado");
+            
             jurado.setPersona(persona);
         }
         
