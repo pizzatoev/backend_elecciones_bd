@@ -27,7 +27,14 @@ public class Partido {
     @Column(name = "estado", nullable = false)
     private Estado estado = Estado.ACTIVO;
 
+    /**
+     * URL del logo del partido - Módulo Infraestructura
+     * Responsabilidad: Waldir Trancoso
+     */
+    @Column(name = "logo_url", length = 500)
+    private String logoUrl;
+
     public enum Estado {
-        ACTIVO, INACTIVO
+        ACTIVO, INACTIVO, DISUELTO // Agregado DISUELTO para el endpoint de cambio de estado
     }
 }

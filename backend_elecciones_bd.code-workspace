@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../frontend_elecciones"
+		},
+		{
+			"path": "../DataGripProjects/Elecciones"
+		}
+	],
+	"settings": {}
+}

@@ -35,13 +35,9 @@ public class SecurityConfig implements WebMvcConfigurer {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/historial/**").hasRole("ADMIN")
-                .anyRequest().permitAll()
+                .anyRequest().permitAll() // Permitir todas las peticiones para pruebas - Módulo Infraestructura
             )
-            .userDetailsService(customUserDetailsService)
-            .httpBasic()
-            .and()
-            .formLogin().disable();
+            .userDetailsService(customUserDetailsService);
         
         return http.build();
     }

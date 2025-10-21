@@ -13,4 +13,5 @@ public class PartidoDTO {
     private String sigla;
     private String nombre;
     private Partido.Estado estado;
+    private String logoUrl; // Campo logoUrl - Módulo Infraestructura
 }

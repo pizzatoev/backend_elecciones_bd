@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pruebas Módulo Infraestructura</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        h2 {
+            color: #666;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Pruebas del Módulo Infraestructura</h1>
+        <p><strong>Responsabilidad:</strong> Waldir Trancoso</p>
+        <p><strong>Base URL:</strong> http://localhost:9090</p>
+    </div>
+
+    <div class="container">
+        <h2>🔧 Pruebas de Personas</h2>
+        <div class="test-section">
+            <h3>1. Crear Persona Válida</h3>
+            <button onclick="crearPersonaValida()">Crear Persona</button>
+            <div id="result1" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>2. Probar Validaciones</h3>
+            <button onclick="probarValidaciones()">Probar Validaciones</button>
+            <div id="result2" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>3. Listar Personas</h3>
+            <button onclick="listarPersonas()">Listar Personas</button>
+            <div id="result3" class="result"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>🏛️ Pruebas de Partidos</h2>
+        <div class="test-section">
+            <h3>4. Crear Partido</h3>
+            <button onclick="crearPartido()">Crear Partido</button>
+            <div id="result4" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>5. Subir Logo</h3>
+            <button onclick="subirLogo()">Subir Logo</button>
+            <div id="result5" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>6. Cambiar Estado</h3>
+            <button onclick="cambiarEstado()">Cambiar a DISUELTO</button>
+            <div id="result6" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>7. Listar Partidos</h3>
+            <button onclick="listarPartidos()">Listar Partidos</button>
+            <div id="result7" class="result"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>🚀 Ejecutar Todas las Pruebas</h2>
+        <button onclick="ejecutarTodasLasPruebas()" style="background: #28a745; font-size: 16px; padding: 15px 30px;">
+            Ejecutar Todas las Pruebas
+        </button>
+        <div id="resultAll" class="result"></div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:9090';
+        let partidoId = null;
+
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                
+                const data = await response.json();
+                return { success: response.ok, data, status: response.status };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+
+        function logResult(elementId, message, isError = false) {
+            const element = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            const className = isError ? 'error' : 'success';
+            element.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            element.scrollTop = element.scrollHeight;
+        }
+
+        async function crearPersonaValida() {
+            logResult('result1', 'Creando persona válida...');
+            
+            const result = await makeRequest(`${BASE_URL}/api/personas`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    ci: '12345678',
+                    nombre: 'Juan',
+                    apellido: 'Pérez',
+                    correo: 'juan.perez@email.com',
+                    telefono: '123456789',
+                    ciudad: 'La Paz',
+                    estado: 'VIVO'
+                })
+            });
+            
+            if (result.success) {
+                logResult('result1', `✅ Persona creada: ${JSON.stringify(result.data, null, 2)}`);
+            } else {
+                logResult('result1', `❌ Error: ${result.error || result.data}`, true);
+            }
+        }
+
+        async function probarValidaciones() {
+            logResult('result2', 'Probando validaciones...');
+            
+            const result = await makeRequest(`${BASE_URL}/api/personas`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    ci: '',
+                    nombre: '',
+                    apellido: '',
+                    correo: 'correo-invalido'
+                })
+            });
+            
+            if (!result.success) {
+                logResult('result2', `✅ Validaciones funcionando: ${result.data}`);
+            } else {
+                logResult('result2', `❌ Las validaciones no están funcionando`, true);
+            }
+        }
+
+        async function listarPersonas() {
+            logResult('result3', 'Listando personas...');
+            
+            const result = await makeRequest(`${BASE_URL}/api/personas`);
+            
+            if (result.success) {
+                logResult('result3', `✅ Personas encontradas: ${JSON.stringify(result.data, null, 2)}`);
+            } else {
+                logResult('result3', `❌ Error: ${result.error || result.data}`, true);
+            }
+        }
+
+        async function crearPartido() {
+            logResult('result4', 'Creando partido...');
+            
+            const result = await makeRequest(`${BASE_URL}/api/partidos`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    sigla: 'MAS',
+                    nombre: 'Movimiento al Socialismo',
+                    estado: 'ACTIVO'
+                })
+            });
+            
+            if (result.success) {
+                partidoId = result.data.id;
+                logResult('result4', `✅ Partido creado: ${JSON.stringify(result.data, null, 2)}`);
+            } else {
+                logResult('result4', `❌ Error: ${result.error || result.data}`, true);
+            }
+        }
+
+        async function subirLogo() {
+            if (!partidoId) {
+                logResult('result5', '❌ Primero debe crear un partido', true);
+                return;
+            }
+            
+            logResult('result5', 'Subiendo logo...');
+            
+            const result = await makeRequest(`${BASE_URL}/api/partidos/upload-logo/${partidoId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'logoUrl=http://localhost:9090/uploads/partidos/logo_mas.png'
+            });
+            
+            if (result.success) {
+                logResult('result5', `✅ Logo subido: ${JSON.stringify(result.data, null, 2)}`);
+            } else {
+                logResult('result5', `❌ Error: ${result.error || result.data}`, true);
+            }
+        }
+
+        async function cambiarEstado() {
+            if (!partidoId) {
+                logResult('result6', '❌ Primero debe crear un partido', true);
+                return;
+            }
+            
+            logResult('result6', 'Cambiando estado...');
+            
+            const result = await makeRequest(`${BASE_URL}/api/partidos/${partidoId}/estado?nuevoEstado=DISUELTO`, {
+                method: 'PUT'
+            });
+            
+            if (result.success) {
+                logResult('result6', `✅ Estado cambiado: ${JSON.stringify(result.data, null, 2)}`);
+            } else {
+                logResult('result6', `❌ Error: ${result.error || result.data}`, true);
+            }
+        }
+
+        async function listarPartidos() {
+            logResult('result7', 'Listando partidos...');
+            
+            const result = await makeRequest(`${BASE_URL}/api/partidos`);
+            
+            if (result.success) {
+                logResult('result7', `✅ Partidos encontrados: ${JSON.stringify(result.data, null, 2)}`);
+            } else {
+                logResult('result7', `❌ Error: ${result.error || result.data}`, true);
+            }
+        }
+
+        async function ejecutarTodasLasPruebas() {
+            logResult('resultAll', '🚀 INICIANDO TODAS LAS PRUEBAS...');
+            
+            // Limpiar resultados anteriores
+            document.getElementById('result1').innerHTML = '';
+            document.getElementById('result2').innerHTML = '';
+            document.getElementById('result3').innerHTML = '';
+            document.getElementById('result4').innerHTML = '';
+            document.getElementById('result5').innerHTML = '';
+            document.getElementById('result6').innerHTML = '';
+            document.getElementById('result7').innerHTML = '';
+            
+            // Ejecutar pruebas en secuencia
+            await crearPersonaValida();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await probarValidaciones();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await listarPersonas();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await crearPartido();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await subirLogo();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await cambiarEstado();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await listarPartidos();
+            
+            logResult('resultAll', '✅ TODAS LAS PRUEBAS COMPLETADAS');
+        }
+    </script>
+</body>
+</html>
