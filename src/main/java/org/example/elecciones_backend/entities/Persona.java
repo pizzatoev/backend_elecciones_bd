@@ -47,4 +47,20 @@ public class Persona {
     @Column(name = "creado_en", updatable = false, insertable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private java.sql.Timestamp creadoEn;
+
+    /**
+     * Estado de la persona - Módulo Infraestructura
+     * Responsabilidad: Waldir Trancoso
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false, length = 20)
+    private EstadoPersona estado = EstadoPersona.VIVO;
+
+    /**
+     * Enum para el estado de la persona - Módulo Infraestructura
+     * Responsabilidad: Waldir Trancoso
+     */
+    public enum EstadoPersona {
+        VIVO, FALLECIDO
+    }
 }

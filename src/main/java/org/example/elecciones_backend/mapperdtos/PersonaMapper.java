@@ -15,7 +15,8 @@ public class PersonaMapper {
                 persona.getCorreo(),
                 persona.getTelefono(),
                 persona.getCiudad(),
-                persona.getFotoCarnet()
+                persona.getFotoCarnet(),
+                persona.getEstado() // Campo estado_vida - Módulo Infraestructura
         );
     }
 
@@ -30,6 +31,7 @@ public class PersonaMapper {
         persona.setTelefono(personaDTO.getTelefono());
         persona.setCiudad(personaDTO.getCiudad());
         persona.setFotoCarnet(personaDTO.getFotoCarnet());
+        persona.setEstado(personaDTO.getEstado() != null ? personaDTO.getEstado() : Persona.EstadoPersona.VIVO); // Campo estado_vida - Módulo Infraestructura
         return persona;
     }
 }

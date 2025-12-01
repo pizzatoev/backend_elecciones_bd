@@ -19,9 +19,13 @@ public class PersonaController {
 
     // Crear Persona
     @PostMapping
-    public ResponseEntity<PersonaDTO> createPersona(@RequestBody PersonaDTO personaDTO) {
-        PersonaDTO savedPersona = personaService.createPersona(personaDTO);
-        return new ResponseEntity<>(savedPersona, HttpStatus.CREATED);
+    public ResponseEntity<?> createPersona(@RequestBody PersonaDTO personaDTO) {
+        try {
+            PersonaDTO savedPersona = personaService.createPersona(personaDTO);
+            return new ResponseEntity<>(savedPersona, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     // Listar todas las Personas
@@ -44,9 +48,13 @@ public class PersonaController {
 
     // Actualizar Persona
     @PutMapping("{id}")
-    public ResponseEntity<PersonaDTO> updatePersona(@PathVariable Long id,
+    public ResponseEntity<?> updatePersona(@PathVariable Long id,
                                                     @RequestBody PersonaDTO personaDTO) {
-        return ResponseEntity.ok(personaService.updatePersona(id, personaDTO));
+        try {
+            return ResponseEntity.ok(personaService.updatePersona(id, personaDTO));
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     // Eliminar Persona

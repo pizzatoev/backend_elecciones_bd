@@ -61,4 +61,28 @@ public class PartidoController {
     public ResponseEntity<String> deletePartido(@PathVariable Long id) {
         return ResponseEntity.ok(partidoService.deletePartido(id));
     }
+
+    // Subir logo de partido - Módulo Infraestructura
+    // Responsabilidad: Waldir Trancoso
+    @PostMapping("/upload-logo/{id}")
+    public ResponseEntity<?> uploadLogo(@PathVariable Long id, @RequestParam("logoUrl") String logoUrl) {
+        try {
+            PartidoDTO updatedPartido = partidoService.uploadLogo(id, logoUrl);
+            return ResponseEntity.ok(updatedPartido);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // Cambiar estado de partido - Módulo Infraestructura
+    // Responsabilidad: Waldir Trancoso
+    @PutMapping("/{id}/estado")
+    public ResponseEntity<?> changeEstado(@PathVariable Long id, @RequestParam("nuevoEstado") Partido.Estado nuevoEstado) {
+        try {
+            PartidoDTO updatedPartido = partidoService.changeEstado(id, nuevoEstado);
+            return ResponseEntity.ok(updatedPartido);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

@@ -75,4 +75,28 @@ public class PartidoServiceImpl implements PartidoService {
         List<Partido> partidos = partidoRepository.findByEstado(estado);
         return partidos.stream().map(PartidoMapper::mapPartidoToPartidoDTO).collect(Collectors.toList());
     }
+
+    @Override
+    public PartidoDTO uploadLogo(Long id, String logoUrl) {
+        // Endpoint para subir logo - Módulo Infraestructura
+        // Responsabilidad: Waldir Trancoso
+        Partido partido = partidoRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Partido not found with id " + id)
+        );
+        
+        partido.setLogoUrl(logoUrl);
+        return PartidoMapper.mapPartidoToPartidoDTO(partidoRepository.save(partido));
+    }
+
+    @Override
+    public PartidoDTO changeEstado(Long id, Partido.Estado nuevoEstado) {
+        // Endpoint para cambiar estado - Módulo Infraestructura
+        // Responsabilidad: Waldir Trancoso
+        Partido partido = partidoRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Partido not found with id " + id)
+        );
+        
+        partido.setEstado(nuevoEstado);
+        return PartidoMapper.mapPartidoToPartidoDTO(partidoRepository.save(partido));
+    }
 }

@@ -10,7 +10,8 @@ public class PartidoMapper {
                 partido.getId(),
                 partido.getSigla(),
                 partido.getNombre(),
-                partido.getEstado()
+                partido.getEstado(),
+                partido.getLogoUrl() // Campo logoUrl - Módulo Infraestructura
         );
     }
 
@@ -20,6 +21,7 @@ public class PartidoMapper {
         partido.setSigla(partidoDTO.getSigla());
         partido.setNombre(partidoDTO.getNombre());
         partido.setEstado(partidoDTO.getEstado());
+        partido.setLogoUrl(partidoDTO.getLogoUrl()); // Campo logoUrl - Módulo Infraestructura
         return partido;
     }
 }

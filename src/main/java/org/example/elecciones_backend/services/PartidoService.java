@@ -12,4 +12,6 @@ public interface PartidoService {
     PartidoDTO getPartidoBySigla(String sigla);
     List<PartidoDTO> getPartidos();
     List<PartidoDTO> getPartidosByEstado(Partido.Estado estado);
+    PartidoDTO uploadLogo(Long id, String logoUrl); // Endpoint para subir logo - Módulo Infraestructura
+    PartidoDTO changeEstado(Long id, Partido.Estado nuevoEstado); // Endpoint para cambiar estado - Módulo Infraestructura
 }

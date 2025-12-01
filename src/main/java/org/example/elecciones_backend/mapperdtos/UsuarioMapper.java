@@ -17,11 +17,17 @@ public class UsuarioMapper {
 
     public static Usuario mapUsuarioDTOToUsuario(UsuarioDTO usuarioDTO) {
         Usuario usuario = new Usuario();
-        usuario.setId(usuarioDTO.getId());
+        // No asignar ID para nuevos usuarios (se genera automáticamente)
+        if (usuarioDTO.getId() != null) {
+            usuario.setId(usuarioDTO.getId());
+        }
         usuario.setUsername(usuarioDTO.getUsername());
         usuario.setPassword(usuarioDTO.getPassword()); // Mapear password directamente
         usuario.setRol(usuarioDTO.getRol());
-        usuario.setCreadoEn(usuarioDTO.getCreadoEn());
+        // No asignar creadoEn para nuevos usuarios (se genera automáticamente)
+        if (usuarioDTO.getCreadoEn() != null) {
+            usuario.setCreadoEn(usuarioDTO.getCreadoEn());
+        }
         return usuario;
     }
 }
